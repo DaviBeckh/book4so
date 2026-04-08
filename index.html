@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Book4so</title>
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<style>
+:root {
+  --cor-primaria: #ff6f91;
+  --cor-fundo-livro: #fff5f8;
+  --cor-capa: #ffccd5;
+  --transicao: 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: linear-gradient(135deg, #ffd6e0, #e0c3fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  overflow: hidden;
+  touch-action: manipulation;
+}
+
+.book-container {
+  width: 90vw;
+  max-width: 340px;
+  height: 70vh;
+  max-height: 480px;
+  position: relative;
+  perspective: 2000px;
+}
+
+.sheet {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: left;
+  transform-style: preserve-3d;
+  transition: transform var(--transicao);
+}
+
+.page {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 10px 25px 25px 10px;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  box-sizing: border-box;
+  background: white;
+  box-shadow: inset -5px 0 10px rgba(0,0,0,0.05), 5px 10px 20px rgba(0,0,0,0.1);
+}
+
+p, textarea {
+  color: #555;
+  font-size: 14px;
+  line-height: 22px;
+  text-align: justify;
+  margin: 0;
+  background-image: linear-gradient(transparent 21px, #f0f0f0 21px);
+  background-size: 100% 22px;
+  width: 100%;
+  border: none;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  resize: none;
+  outline: none;
+  position: relative;
+  z-index: 10;
+}
+
+textarea {
+  height: 160px;
+  background-attachment: local;
+}
+
+.page::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: rgba(0,0,0,0.06);
+}
+
+.cover-front { background: var(--cor-capa) !important; border-left: 8px solid #ffb3c1; }
+.back { background: var(--cor-fundo-livro); transform: rotateY(180deg); border-radius: 25px 10px 10px 25px; }
+.sheet.flipped { transform: rotateY(-180deg); }
+
+/* Setas como Botões */
+.arrow-btn {
+  position: absolute;
+  font-size: 32px;
+  color: var(--cor-primaria);
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 5;
+  padding: 10px;
+}
+
+.arrow-lt { top: 10px; left: 10px; }
+.arrow-lb { bottom: 10px; left: 10px; }
+.arrow-rt { top: 10px; right: 10px; }
+.arrow-rb { bottom: 10px; right: 10px; }
+
+@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
+.animate-arrows { animation: blink 0.5s ease 3; }
+
+.btn-salvar {
+  margin-top: 15px;
+  background: var(--cor-primaria);
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', cursive;
+  position: relative;
+  z-index: 10;
+}
+
+h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="book-container">
+  
+  <div class="sheet" id="s0" style="z-index: 3;">
+    <div class="page front cover-front">
+      <span style="font-size: 45px;">📔</span>
+      <h2>Oi, Sofia!</h2>
+      <p style="background: none; text-align: center;">talvez seja o menor livro que vai ler</p>
+    </div>
+    <div class="page back"></div>
+    <button class="arrow-btn arrow-rt" onclick="nextPage()">→</button>
+    <button class="arrow-btn arrow-rb" onclick="nextPage()">→</button>
+  </div>
+
+  <div class="sheet" id="s1" style="z-index: 2;">
+    <div class="page front">
+      <p>Eu não sei exatamente como explicar isso… mas desde que eu te conheci, você ficou na minha cabeça de um jeito diferente. Não é só bonito, nem só legal, é algo que chama atenção de verdade. Eu tô tentando descobrir se isso é só coisa minha ou se você também sente algo aí. Venho tentando do meu jeito já faz um tempinho, mas às vezes fico sem saber se isso chega até você ou se faz alguma diferença. É algo que eu preciso saber; eu só queria entender se existe, pelo menos, uma chance disso crescer de verdade.</p> 
+    </div>
+    <div class="page back"></div>
+    <button class="arrow-btn arrow-lt" onclick="prevPage()">←</button>
+    <button class="arrow-btn arrow-lb" onclick="prevPage()">←</button>
+    <button class="arrow-btn arrow-rt" onclick="nextPage()">→</button>
+    <button class="arrow-btn arrow-rb" onclick="nextPage()">→</button>
+  </div>
+
+  <div class="sheet" id="s2" style="z-index: 1;">
+    <div class="page front">
+      <textarea id="textoResposta" placeholder="pode escrever algo se quiser"></textarea>
+      <button class="btn-salvar" id="btnSave" onclick="salvarNoFirebase()">Save</button>
+    </div>
+    <div class="page back"></div>
+    <button class="arrow-btn arrow-lt" onclick="prevPage()">←</button>
+    <button class="arrow-btn arrow-lb" onclick="prevPage()">←</button>
+  </div>
+
+</div>
+
+<script>
+  // --- CONFIGURAÇÃO FIREBASE (SUBSTITUA PELOS SEUS DADOS) ---
+  const firebaseConfig = {
+    apiKey: "AIzaSyCKa219_gQ7_1Br1fCM-PHW3ev9AEzZZJ8",
+  authDomain: "book4so.firebaseapp.com",
+  databaseURL: "https://book4so-default-rtdb.firebaseio.com",
+  projectId: "book4so",
+  storageBucket: "book4so.firebasestorage.app",
+  messagingSenderId: "39366366793",
+  appId: "1:39366366793:web:53cd189032c6d598b45198",
+  measurementId: "G-1NJWNJ3VEK"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+
+  const sheets = document.querySelectorAll('.sheet');
+  const arrows = document.querySelectorAll('.arrow-btn');
+  let current = 0;
+
+  window.onload = () => {
+    arrows.forEach(a => a.classList.add('animate-arrows'));
+  };
+
+  function nextPage() {
+    if (current < sheets.length - 1) {
+      const sheet = document.getElementById('s' + current);
+      sheet.classList.add('flipped');
+      sheet.style.zIndex = current; 
+      current++;
+    }
+  }
+
+  function prevPage() {
+    if (current > 0) {
+      current--;
+      const sheet = document.getElementById('s' + current);
+      sheet.classList.remove('flipped');
+      sheet.style.zIndex = sheets.length - current;
+    }
+  }
+
+  function salvarNoFirebase() {
+    const texto = document.getElementById('textoResposta').value;
+    const btn = document.getElementById('btnSave');
+
+    if (texto.trim() === "") {
+      alert("Escreva algo antes de salvar! 😊");
+      return;
+    }
+
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+
+    database.ref('respostas').push().set({
+      mensagem: texto,
+      data: new Date().toLocaleString()
+    })
+    .then(() => {
+      alert("Enviado com sucesso! 💖");
+      btn.innerText = "Save";
+      btn.disabled = false;
+    })
+    .catch((error) => {
+      alert("Erro ao salvar: " + error.message);
+      btn.innerText = "Save";
+      btn.disabled = false;
+    });
+  }
+</script>
+
+</body>
+</html>
