@@ -151,7 +151,8 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
 
   <div class="sheet" id="s1" style="z-index: 2;">
     <div class="page front">
-      <p>você pode chutar e eu confirmar</p> 
+      <p>Congratulations!!! 
+      </p> 
     </div>
     <div class="page back"></div>
     <button class="arrow-btn arrow-lt" onclick="prevPage()">←</button>
@@ -171,7 +172,8 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
   </div>
 
 </div>
-
+  
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  
 <script>
   // --- CONFIGURAÇÃO FIREBASE (SUBSTITUA PELOS SEUS DADOS) ---
   const firebaseConfig = {
@@ -188,6 +190,32 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
+  // ✅ CONFETE (ADICIONADO)
+  let confettiInterval = null;
+
+  function explosaoConfete() {
+    confetti({
+      particleCount: 120,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+
+  function chuvaConfete() {
+    confettiInterval = setInterval(() => {
+      confetti({
+        particleCount: 25,
+        angle: 90,
+        spread: 60,
+        origin: { x: Math.random(), y: 0 }
+      });
+    }, 300);
+  }
+
+  function pararConfete() {
+    clearInterval(confettiInterval);
+  }
+
   const sheets = document.querySelectorAll('.sheet');
   const arrows = document.querySelectorAll('.arrow-btn');
   let current = 0;
@@ -202,6 +230,17 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
       sheet.classList.add('flipped');
       sheet.style.zIndex = current; 
       current++;
+
+      // ✅ Página 2 → explode + começa chuva
+      if (current === 1) {
+        explosaoConfete();
+        chuvaConfete();
+      }
+
+      // ✅ Página 3 → para tudo
+      if (current === 2) {
+        pararConfete();
+      }
     }
   }
 
