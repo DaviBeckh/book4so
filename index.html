@@ -131,6 +131,21 @@ textarea {
   z-index: 10;
 }
 
+/* NOVO BOTÃO CINZA */
+.btn-novo {
+  margin-top: 8px;
+  background: #b0b0b0;
+  color: #f0f0f0;
+  border: none;
+  padding: 6px 15px;
+  border-radius: 15px;
+  cursor: pointer;
+  font-family: 'Comic Sans MS', cursive;
+  font-size: 12px;
+  position: relative;
+  z-index: 10;
+}
+
 h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-size: 20px; }
 </style>
 </head>
@@ -165,6 +180,7 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
     <div class="page front">
       <textarea id="textoResposta" placeholder="pode escrever algo se quiser"></textarea>
       <button class="btn-salvar" id="btnSave" onclick="salvarNoFirebase()">Save</button>
+      <button class="btn-novo" id="btnNovo" onclick="enviarMensagemNova()">botãozinho novo</button>
     </div>
     <div class="page back"></div>
     <button class="arrow-btn arrow-lt" onclick="prevPage()">←</button>
@@ -175,22 +191,22 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
   
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  
 <script>
-  // --- CONFIGURAÇÃO FIREBASE (SUBSTITUA PELOS SEUS DADOS) ---
+  // --- CONFIGURAÇÃO FIREBASE ---
   const firebaseConfig = {
     apiKey: "AIzaSyCKa219_gQ7_1Br1fCM-PHW3ev9AEzZZJ8",
-  authDomain: "book4so.firebaseapp.com",
-  databaseURL: "https://book4so-default-rtdb.firebaseio.com",
-  projectId: "book4so",
-  storageBucket: "book4so.firebasestorage.app",
-  messagingSenderId: "39366366793",
-  appId: "1:39366366793:web:53cd189032c6d598b45198",
-  measurementId: "G-1NJWNJ3VEK"
+    authDomain: "book4so.firebaseapp.com",
+    databaseURL: "https://book4so-default-rtdb.firebaseio.com",
+    projectId: "book4so",
+    storageBucket: "book4so.firebasestorage.app",
+    messagingSenderId: "39366366793",
+    appId: "1:39366366793:web:53cd189032c6d598b45198",
+    measurementId: "G-1NJWNJ3VEK"
   };
 
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  // ✅ CONFETE (ADICIONADO)
+  // CONFETE
   let confettiInterval = null;
 
   function explosaoConfete() {
@@ -231,13 +247,11 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
       sheet.style.zIndex = current; 
       current++;
 
-      // ✅ Página 2 → explode + começa chuva
       if (current === 1) {
         explosaoConfete();
         chuvaConfete();
       }
 
-      // ✅ Página 3 → para tudo
       if (current === 2) {
         pararConfete();
       }
@@ -277,6 +291,28 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
     .catch((error) => {
       alert("Erro ao salvar: " + error.message);
       btn.innerText = "Save";
+      btn.disabled = false;
+    });
+  }
+
+  // FUNÇÃO DO NOVO BOTÃO
+  function enviarMensagemNova() {
+    const btn = document.getElementById('btnNovo');
+    btn.innerText = "Enviando...";
+    btn.disabled = true;
+
+    database.ref('respostas').push().set({
+      mensagem: "Insistente mais não",
+      data: new Date().toLocaleString()
+    })
+    .then(() => {
+      alert("Mensagem enviada! ✨");
+      btn.innerText = "botãozinho novo";
+      btn.disabled = false;
+    })
+    .catch((error) => {
+      alert("Erro ao enviar: " + error.message);
+      btn.innerText = "botãozinho novo";
       btn.disabled = false;
     });
   }
