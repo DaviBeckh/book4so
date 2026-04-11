@@ -16,16 +16,23 @@
   --transicao: 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
+/* ESTADO MORTO: Aplicado ao body para afetar tudo */
+body.morto {
+  filter: grayscale(100%) brightness(0.4) contrast(1.2);
+  background: #2c2c2c !important; /* Muda o fundo rosa para um cinza bem escuro */
+}
+
 body {
   margin: 0;
   height: 100vh;
-  background: linear-gradient(135deg, #ffd6e0, #e0c3fc);
+  background: #ffd6e0; 
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: 'Comic Sans MS', cursive, sans-serif;
   overflow: hidden;
   touch-action: manipulation;
+  transition: filter 1.5s ease, background 1.5s ease; /* Transição suave do efeito */
 }
 
 .book-container {
@@ -98,7 +105,6 @@ textarea {
 .back { background: var(--cor-fundo-livro); transform: rotateY(180deg); border-radius: 25px 10px 10px 25px; }
 .sheet.flipped { transform: rotateY(-180deg); }
 
-/* Setas como Botões */
 .arrow-btn {
   position: absolute;
   font-size: 32px;
@@ -131,7 +137,6 @@ textarea {
   z-index: 10;
 }
 
-/* NOVO BOTÃO CINZA */
 .btn-novo {
   margin-top: 8px;
   background: #b0b0b0;
@@ -166,7 +171,10 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
 
   <div class="sheet" id="s1" style="z-index: 2;">
     <div class="page front">
-      <p>Congratulations!!! já já novas atualizações 
+      <p>Congratulations!!!  
+        a criatividade de uma página só kkkkkk
+        vou ter que ser mais criativo, você não facilita. Mas vou continuar me esforçando mesmo que você nem mude de ideia, eu sinto que não vale nem a pena, vale a galinha toda logo, e eu sou insistente viu, masss, vou por um botãozinho novo para caso não queira a insistência, mas se você não apertar, eu vou me esforçar e ser mais criativo aínda, te garanto que vai se surpreender.
+        
       </p> 
     </div>
     <div class="page back"></div>
@@ -206,25 +214,15 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  // CONFETE
   let confettiInterval = null;
 
   function explosaoConfete() {
-    confetti({
-      particleCount: 120,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
+    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
   }
 
   function chuvaConfete() {
     confettiInterval = setInterval(() => {
-      confetti({
-        particleCount: 25,
-        angle: 90,
-        spread: 60,
-        origin: { x: Math.random(), y: 0 }
-      });
+      confetti({ particleCount: 25, angle: 90, spread: 60, origin: { x: Math.random(), y: 0 } });
     }, 300);
   }
 
@@ -272,7 +270,7 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
     const btn = document.getElementById('btnSave');
 
     if (texto.trim() === "") {
-      alert("Escreva algo antes de salvar! 😊");
+      alert("Escreva algo antes de salvar!");
       return;
     }
 
@@ -284,7 +282,7 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
       data: new Date().toLocaleString()
     })
     .then(() => {
-      alert("Enviado com sucesso! 💖");
+      alert("Enviado com sucesso!");
       btn.innerText = "Save";
       btn.disabled = false;
     })
@@ -295,9 +293,13 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
     });
   }
 
-  // FUNÇÃO DO NOVO BOTÃO
+  // FUNÇÃO DO NOVO BOTÃO COM EFEITO VISUAL
   function enviarMensagemNova() {
     const btn = document.getElementById('btnNovo');
+    
+    // ATIVA O MODO "MORTO" NO BODY
+    document.body.classList.add('morto');
+
     btn.innerText = "Enviando...";
     btn.disabled = true;
 
@@ -306,14 +308,18 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
       data: new Date().toLocaleString()
     })
     .then(() => {
-      alert("Mensagem enviada! ✨");
-      btn.innerText = "botãozinho novo";
-      btn.disabled = false;
+      // Delay pequeno para o usuário ver a transição de cor antes do alerta
+      setTimeout(() => {
+        alert("Mensagem pesadíssima enviada, site morreu.💀");
+        btn.innerText = "botãozinho novo";
+        btn.disabled = false;
+      }, 1000);
     })
     .catch((error) => {
       alert("Erro ao enviar: " + error.message);
       btn.innerText = "botãozinho novo";
       btn.disabled = false;
+      document.body.classList.remove('morto'); // Remove se der erro, opcional
     });
   }
 </script>
