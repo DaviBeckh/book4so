@@ -182,6 +182,7 @@ textarea {
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
+
 <script>
 const firebaseConfig = {
   apiKey: "AIzaSyCKa219_gQ7_1Br1fCM-PHW3ev9AEzZZJ8",
@@ -214,6 +215,33 @@ database.ref("respostas").on("value", (snapshot) => {
   document.getElementById("p3").innerText = texto;
 });
 
+
+// 💀🔥 ESTADO GLOBAL (SINCRONIZA OS DOIS SITES)
+database.ref("estadoSite").on("value", (snapshot) => {
+  const estado = snapshot.val();
+  const btn = document.getElementById("btnNovo");
+
+  if (estado === "morto") {
+    document.body.classList.add("morto");
+
+    if (btn) {
+      btn.style.background = "#ff4d6d";
+      btn.style.color = "white";
+      btn.innerText = "desfazer 💔";
+    }
+
+  } else {
+    document.body.classList.remove("morto");
+
+    if (btn) {
+      btn.style.background = "#b0b0b0";
+      btn.style.color = "#f0f0f0";
+      btn.innerText = "botãozinho novo";
+    }
+  }
+});
+
+
 // 🎉 CONFETE
 let confettiInterval = null;
 
@@ -231,7 +259,7 @@ function pararConfete() {
   clearInterval(confettiInterval);
 }
 
-// 📖 PÁGINAS (AGORA FUNCIONA)
+// 📖 PÁGINAS
 let sheets;
 let current = 0;
 
@@ -257,7 +285,7 @@ function nextPage() {
   }
 }
 
-// 👉 VOLTAR PÁGINA
+// 👉 VOLTAR
 function prevPage() {
   if (current > 0) {
     current--;
@@ -305,12 +333,22 @@ function salvarNoFirebase() {
   });
 }
 
-// 💀 BOTÃO DO CAOS
+
+// 💀 BOTÃO DO CAOS (AGORA SINCRONIZADO)
 function enviarMensagemNova() {
-  document.body.classList.add('morto');
+  const estadoRef = database.ref("estadoSite");
+
+  estadoRef.get().then((snapshot) => {
+    const estadoAtual = snapshot.val();
+
+    if (estadoAtual === "morto") {
+      estadoRef.set("vivo"); // 💔 desfaz
+    } else {
+      estadoRef.set("morto"); // 💀 ativa
+    }
+  });
 }
 </script>
-
 
 </body>
 </html>
