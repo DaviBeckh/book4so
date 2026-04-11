@@ -16,10 +16,9 @@
   --transicao: 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 
-/* ESTADO MORTO: Aplicado ao body para afetar tudo */
 body.morto {
   filter: grayscale(100%) brightness(0.4) contrast(1.2);
-  background: #2c2c2c !important; /* Muda o fundo rosa para um cinza bem escuro */
+  background: #2c2c2c !important;
 }
 
 body {
@@ -32,7 +31,7 @@ body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   overflow: hidden;
   touch-action: manipulation;
-  transition: filter 1.5s ease, background 1.5s ease; /* Transição suave do efeito */
+  transition: filter 1.5s ease, background 1.5s ease;
 }
 
 .book-container {
@@ -82,8 +81,6 @@ p, textarea {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   resize: none;
   outline: none;
-  position: relative;
-  z-index: 10;
 }
 
 textarea {
@@ -121,9 +118,6 @@ textarea {
 .arrow-rt { top: 10px; right: 10px; }
 .arrow-rb { bottom: 10px; right: 10px; }
 
-@keyframes blink { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-.animate-arrows { animation: blink 0.5s ease 3; }
-
 .btn-salvar {
   margin-top: 15px;
   background: var(--cor-primaria);
@@ -132,9 +126,6 @@ textarea {
   padding: 10px 25px;
   border-radius: 20px;
   cursor: pointer;
-  font-family: 'Comic Sans MS', cursive;
-  position: relative;
-  z-index: 10;
 }
 
 .btn-novo {
@@ -145,15 +136,11 @@ textarea {
   padding: 6px 15px;
   border-radius: 15px;
   cursor: pointer;
-  font-family: 'Comic Sans MS', cursive;
   font-size: 12px;
-  position: relative;
-  z-index: 10;
 }
-
-h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-size: 20px; }
 </style>
 </head>
+
 <body>
 
 <div class="book-container">
@@ -171,11 +158,7 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
 
   <div class="sheet" id="s1" style="z-index: 2;">
     <div class="page front">
-      <p>Congratulations!!!  
-        a criatividade de uma página só kkkkkk
-        vou ter que ser mais criativo, você não facilita. Mas vou continuar me esforçando mesmo que você nem mude de ideia, eu sinto que não vale nem a pena, vale a galinha toda logo, e eu já sou insistente, masss, vou por um botãozinho novo para caso não queira a minha insistência, entretanto se você não apertar, eu vou continuar a me esforçar e ser mais criativo aínda, te garanto que vai se surpreender.
-        
-      </p> 
+      <p id="p3">Carregando...</p>
     </div>
     <div class="page back"></div>
     <button class="arrow-btn arrow-lt" onclick="prevPage()">←</button>
@@ -196,133 +179,138 @@ h2 { color: var(--cor-primaria); margin-bottom: 10px; text-align: center; font-s
   </div>
 
 </div>
-  
-<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>  
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
 <script>
-  // --- CONFIGURAÇÃO FIREBASE ---
-  const firebaseConfig = {
-    apiKey: "AIzaSyCKa219_gQ7_1Br1fCM-PHW3ev9AEzZZJ8",
-    authDomain: "book4so.firebaseapp.com",
-    databaseURL: "https://book4so-default-rtdb.firebaseio.com",
-    projectId: "book4so",
-    storageBucket: "book4so.firebasestorage.app",
-    messagingSenderId: "39366366793",
-    appId: "1:39366366793:web:53cd189032c6d598b45198",
-    measurementId: "G-1NJWNJ3VEK"
-  };
+const firebaseConfig = {
+  apiKey: "AIzaSyCKa219_gQ7_1Br1fCM-PHW3ev9AEzZZJ8",
+  authDomain: "book4so.firebaseapp.com",
+  databaseURL: "https://book4so-default-rtdb.firebaseio.com",
+  projectId: "book4so"
+};
 
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-  let confettiInterval = null;
+// 🔥 MOSTRAR SUA MENSAGEM (MnhPG)
+database.ref("respostas").on("value", (snapshot) => {
+  const dados = snapshot.val();
+  if (!dados) return;
 
-  function explosaoConfete() {
-    confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
-  }
+  const lista = Object.keys(dados)
+    .filter(id => id.startsWith("MnhPG"))
+    .sort((a, b) => {
+      const numA = parseInt(a.replace("MnhPG", ""));
+      const numB = parseInt(b.replace("MnhPG", ""));
+      return numA - numB;
+    });
 
-  function chuvaConfete() {
-    confettiInterval = setInterval(() => {
-      confetti({ particleCount: 25, angle: 90, spread: 60, origin: { x: Math.random(), y: 0 } });
-    }, 300);
-  }
+  if (lista.length === 0) return;
 
-  function pararConfete() {
-    clearInterval(confettiInterval);
-  }
+  const ultima = lista[lista.length - 1];
+  const texto = dados[ultima].mensagem;
 
-  const sheets = document.querySelectorAll('.sheet');
-  const arrows = document.querySelectorAll('.arrow-btn');
-  let current = 0;
+  document.getElementById("p3").innerText = texto;
+});
 
-  window.onload = () => {
-    arrows.forEach(a => a.classList.add('animate-arrows'));
-  };
+// 🎉 CONFETE
+let confettiInterval = null;
 
-  function nextPage() {
-    if (current < sheets.length - 1) {
-      const sheet = document.getElementById('s' + current);
-      sheet.classList.add('flipped');
-      sheet.style.zIndex = current; 
-      current++;
+function explosaoConfete() {
+  confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 } });
+}
 
-      if (current === 1) {
-        explosaoConfete();
-        chuvaConfete();
-      }
+function chuvaConfete() {
+  confettiInterval = setInterval(() => {
+    confetti({ particleCount: 25, angle: 90, spread: 60, origin: { x: Math.random(), y: 0 } });
+  }, 300);
+}
 
-      if (current === 2) {
-        pararConfete();
-      }
-    }
-  }
+function pararConfete() {
+  clearInterval(confettiInterval);
+}
 
-  function prevPage() {
-    if (current > 0) {
-      current--;
-      const sheet = document.getElementById('s' + current);
-      sheet.classList.remove('flipped');
-      sheet.style.zIndex = sheets.length - current;
-    }
-  }
+// 📖 PÁGINAS (AGORA FUNCIONA)
+let sheets;
+let current = 0;
 
-  function salvarNoFirebase() {
-    const texto = document.getElementById('textoResposta').value;
-    const btn = document.getElementById('btnSave');
+window.onload = () => {
+  sheets = document.querySelectorAll('.sheet');
+};
 
-    if (texto.trim() === "") {
-      alert("Escreva algo antes de salvar!");
-      return;
+// 👉 PRÓXIMA PÁGINA
+function nextPage() {
+  if (current < sheets.length - 1) {
+    const sheet = document.getElementById('s' + current);
+    sheet.classList.add('flipped');
+    current++;
+
+    if (current === 1) {
+      explosaoConfete();
+      chuvaConfete();
     }
 
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
+    if (current === 2) {
+      pararConfete();
+    }
+  }
+}
 
-    database.ref('respostas').push().set({
+// 👉 VOLTAR PÁGINA
+function prevPage() {
+  if (current > 0) {
+    current--;
+    const sheet = document.getElementById('s' + current);
+    sheet.classList.remove('flipped');
+  }
+}
+
+// 💌 ELA ESCREVE (RSofia)
+function salvarNoFirebase() {
+  const texto = document.getElementById('textoResposta').value;
+  const btn = document.getElementById('btnSave');
+
+  if (texto.trim() === "") {
+    alert("Escreva algo antes de salvar!");
+    return;
+  }
+
+  btn.innerText = "Enviando...";
+  btn.disabled = true;
+
+  const contadorRef = database.ref('contadorS');
+
+  contadorRef.transaction((current) => {
+    return (current || 0) + 1;
+  }).then((result) => {
+    const numero = result.snapshot.val();
+
+    return database.ref('respostas/RSofia' + numero).set({
       mensagem: texto,
-      data: new Date().toLocaleString()
-    })
-    .then(() => {
-      alert("Enviado com sucesso!");
-      btn.innerText = "Save";
-      btn.disabled = false;
-    })
-    .catch((error) => {
-      alert("Erro ao salvar: " + error.message);
-      btn.innerText = "Save";
-      btn.disabled = false;
+      data: new Date().toLocaleString(),
+      autor: "sofia"
     });
-  }
+  })
+  .then(() => {
+    alert("Enviado com sucesso!");
+    btn.innerText = "Save";
+    btn.disabled = false;
+    document.getElementById('textoResposta').value = "";
+  })
+  .catch((erro) => {
+    alert("Erro: " + erro.message);
+    btn.innerText = "Save";
+    btn.disabled = false;
+  });
+}
 
-  // FUNÇÃO DO NOVO BOTÃO COM EFEITO VISUAL
-  function enviarMensagemNova() {
-    const btn = document.getElementById('btnNovo');
-    
-    // ATIVA O MODO "MORTO" NO BODY
-    document.body.classList.add('morto');
-
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
-
-    database.ref('respostas').push().set({
-      mensagem: "Seu bostinha, larga do meu pé chatonildo, me erra garoto, te odeio!",
-      data: new Date().toLocaleString()
-    })
-    .then(() => {
-      // Delay pequeno para o usuário ver a transição de cor antes do alerta
-      setTimeout(() => {
-        alert("Mensagem pesadíssima enviada, site morreu.💀");
-        btn.innerText = "botãozinho novo";
-        btn.disabled = false;
-      }, 1000);
-    })
-    .catch((error) => {
-      alert("Erro ao enviar: " + error.message);
-      btn.innerText = "botãozinho novo";
-      btn.disabled = false;
-      document.body.classList.remove('morto'); // Remove se der erro, opcional
-    });
-  }
+// 💀 BOTÃO DO CAOS
+function enviarMensagemNova() {
+  document.body.classList.add('morto');
+}
 </script>
+
 
 </body>
 </html>
