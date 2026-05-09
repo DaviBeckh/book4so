@@ -202,6 +202,16 @@ form.active{
     color:#888;
 }
 
+.erro{
+    border-color:red !important;
+}
+
+.mensagem-erro{
+    color:red;
+    font-size:13px;
+    margin-top:5px;
+}
+
 @media(max-width:800px){
 
     .container{
@@ -265,6 +275,8 @@ form.active{
                     id="loginEmail"
                     placeholder="Digite seu email">
 
+                    <div id="erroLogin" class="mensagem-erro"></div>
+
                 </div>
 
                 <div class="input-group">
@@ -311,6 +323,8 @@ form.active{
                     type="email"
                     id="cadEmail"
                     placeholder="Digite seu email">
+
+                    <div id="erroCadastro" class="mensagem-erro"></div>
 
                 </div>
 
@@ -370,8 +384,6 @@ firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
 
-console.log("Firebase conectado");
-
 const buttons = document.querySelectorAll(".tabs button");
 const forms = document.querySelectorAll("form");
 
@@ -391,7 +403,36 @@ function showForm(id,event){
 
 }
 
+function validarEmail(inputId,erroId){
+
+    const input = document.getElementById(inputId);
+    const erro = document.getElementById(erroId);
+
+    if(!input.value.includes("@gmail.com")){
+
+        input.classList.add("erro");
+
+        erro.innerHTML = "O email precisa conter @gmail.com";
+
+        return false;
+
+    }else{
+
+        input.classList.remove("erro");
+
+        erro.innerHTML = "";
+
+        return true;
+
+    }
+
+}
+
 function cadastrar(){
+
+    if(!validarEmail("cadEmail","erroCadastro")){
+        return;
+    }
 
     const nome = document.getElementById("cadNome").value;
     const email = document.getElementById("cadEmail").value;
@@ -446,6 +487,10 @@ function cadastrar(){
 }
 
 function login(){
+
+    if(!validarEmail("loginEmail","erroLogin")){
+        return;
+    }
 
     const email = document.getElementById("loginEmail").value;
     const senha = document.getElementById("loginSenha").value;
