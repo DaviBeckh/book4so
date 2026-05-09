@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Book4so Login</title>
 
@@ -16,7 +16,6 @@
     --rosa-capa:#ffccd5;
     --rosa-borda:#ffb3c1;
     --paginas:#fff5f8;
-    --morto:#2c2c2c;
     --texto:#555;
     --linhas:#f0f0f0;
 }
@@ -25,7 +24,7 @@
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Quicksand', sans-serif;
+    font-family:'Quicksand',sans-serif;
 }
 
 body{
@@ -40,24 +39,24 @@ body{
 .container{
     width:900px;
     max-width:95%;
-    height:550px;
+    height:620px;
     background:var(--paginas);
     border-radius:30px;
     overflow:hidden;
     display:flex;
-    box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    box-shadow:0 15px 40px rgba(0,0,0,.15);
     border:4px solid var(--rosa-borda);
 }
 
 .left{
     width:45%;
     background:linear-gradient(180deg,var(--rosa-principal),var(--rosa-capa));
-    padding:40px;
     color:white;
     display:flex;
     flex-direction:column;
-    justify-content:center;
     align-items:center;
+    justify-content:center;
+    padding:40px;
     text-align:center;
     position:relative;
 }
@@ -66,7 +65,7 @@ body{
     content:"";
     position:absolute;
     inset:15px;
-    border:2px dashed rgba(255,255,255,0.4);
+    border:2px dashed rgba(255,255,255,.4);
     border-radius:25px;
 }
 
@@ -78,7 +77,6 @@ body{
 
 .left p{
     z-index:1;
-    font-size:16px;
 }
 
 .right{
@@ -99,7 +97,7 @@ body{
 
 .form-box{
     width:100%;
-    max-width:350px;
+    max-width:360px;
 }
 
 .tabs{
@@ -130,15 +128,14 @@ body{
 
 form{
     display:none;
-    animation:fade .3s ease;
 }
 
 form.active{
     display:block;
+    animation:fade .3s ease;
 }
 
 @keyframes fade{
-
     from{
         opacity:0;
         transform:translateY(10px);
@@ -148,11 +145,10 @@ form.active{
         opacity:1;
         transform:translateY(0);
     }
-
 }
 
 .input-group{
-    margin-bottom:18px;
+    margin-bottom:16px;
 }
 
 .input-group label{
@@ -167,7 +163,6 @@ form.active{
     padding:14px;
     border-radius:14px;
     border:2px solid var(--rosa-borda);
-    background:white;
     outline:none;
     transition:.3s;
     color:var(--texto);
@@ -175,7 +170,7 @@ form.active{
 
 .input-group input:focus{
     border-color:var(--rosa-principal);
-    box-shadow:0 0 0 4px rgba(255,111,145,0.2);
+    box-shadow:0 0 0 4px rgba(255,111,145,.2);
 }
 
 .submit-btn{
@@ -185,9 +180,10 @@ form.active{
     border-radius:16px;
     background:var(--rosa-principal);
     color:white;
-    font-size:16px;
+    font-size:15px;
     font-weight:700;
     cursor:pointer;
+    margin-top:5px;
     transition:.3s;
 }
 
@@ -198,8 +194,8 @@ form.active{
 .footer{
     margin-top:18px;
     text-align:center;
-    font-size:13px;
     color:#888;
+    font-size:13px;
 }
 
 .erro{
@@ -219,14 +215,9 @@ form.active{
         height:auto;
     }
 
-    .left{
-        width:100%;
-        padding:50px 25px;
-    }
-
+    .left,
     .right{
         width:100%;
-        padding:40px 20px;
     }
 
 }
@@ -253,17 +244,25 @@ form.active{
 
             <div class="tabs">
 
-                <button class="active" onclick="showForm('login',event)">
+                <button
+                class="active"
+                onclick="showForm('login',event)">
+
                     Login
+
                 </button>
 
-                <button onclick="showForm('cadastro',event)">
+                <button
+                onclick="showForm('cadastro',event)">
+
                     Cadastro
+
                 </button>
 
             </div>
 
             <!-- LOGIN -->
+
             <form id="login" class="active">
 
                 <div class="input-group">
@@ -302,6 +301,7 @@ form.active{
             </form>
 
             <!-- CADASTRO -->
+
             <form id="cadastro">
 
                 <div class="input-group">
@@ -328,6 +328,26 @@ form.active{
 
                 </div>
 
+                <button
+                type="button"
+                class="submit-btn"
+                onclick="enviarCodigo()">
+
+                    Enviar código
+
+                </button>
+
+                <div class="input-group">
+
+                    <label>Código</label>
+
+                    <input
+                    type="text"
+                    id="codigoInput"
+                    placeholder="Digite o código recebido">
+
+                </div>
+
                 <div class="input-group">
 
                     <label>Senha</label>
@@ -351,7 +371,7 @@ form.active{
             </form>
 
             <div class="footer">
-                pt-br • firebase • realtime database
+                pt-br • firebase • emailjs
             </div>
 
         </div>
@@ -364,6 +384,10 @@ form.active{
 
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<!-- EMAILJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
 <script>
 
@@ -383,6 +407,10 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 
 const db = firebase.database();
+
+emailjs.init("Ll9UoxYXluEI4SHyh");
+
+let codigoGerado = "";
 
 const buttons = document.querySelectorAll(".tabs button");
 const forms = document.querySelectorAll("form");
@@ -408,11 +436,15 @@ function validarEmail(inputId,erroId){
     const input = document.getElementById(inputId);
     const erro = document.getElementById(erroId);
 
-    if(!input.value.includes("@gmail.com")){
+    const email = input.value;
+
+    const regex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+    if(!regex.test(email)){
 
         input.classList.add("erro");
 
-        erro.innerHTML = "O email precisa conter @gmail.com";
+        erro.innerHTML = "Digite um Gmail válido";
 
         return false;
 
@@ -428,15 +460,69 @@ function validarEmail(inputId,erroId){
 
 }
 
+function enviarCodigo(){
+
+    if(!validarEmail("cadEmail","erroCadastro")){
+        return;
+    }
+
+    const email = document.getElementById("cadEmail").value;
+
+    codigoGerado =
+    Math.floor(100000 + Math.random() * 900000);
+
+    emailjs.send(
+
+        "service_i1lox96",
+        "template_k5eogso",
+
+        {
+            email_destino: email,
+            codigo: codigoGerado
+        }
+
+    )
+
+    .then(()=>{
+
+        alert("Código enviado para o email!");
+
+    })
+
+    .catch((erro)=>{
+
+        console.log(erro);
+
+        alert("Erro ao enviar email");
+
+    });
+
+}
+
 function cadastrar(){
 
     if(!validarEmail("cadEmail","erroCadastro")){
         return;
     }
 
-    const nome = document.getElementById("cadNome").value;
-    const email = document.getElementById("cadEmail").value;
-    const senha = document.getElementById("cadSenha").value;
+    const codigoDigitado =
+    document.getElementById("codigoInput").value;
+
+    if(codigoDigitado != codigoGerado){
+
+        alert("Código incorreto");
+        return;
+
+    }
+
+    const nome =
+    document.getElementById("cadNome").value;
+
+    const email =
+    document.getElementById("cadEmail").value;
+
+    const senha =
+    document.getElementById("cadSenha").value;
 
     if(nome == "" || email == "" || senha == ""){
 
@@ -480,7 +566,8 @@ function cadastrar(){
 
         alert("Conta criada com sucesso!");
 
-        window.location.href = "https://booksofia.vercel.app";
+        window.location.href =
+        "https://booksofia.vercel.app";
 
     });
 
@@ -492,8 +579,11 @@ function login(){
         return;
     }
 
-    const email = document.getElementById("loginEmail").value;
-    const senha = document.getElementById("loginSenha").value;
+    const email =
+    document.getElementById("loginEmail").value;
+
+    const senha =
+    document.getElementById("loginSenha").value;
 
     db.ref("usuarios").once("value")
 
@@ -518,7 +608,8 @@ function login(){
 
         if(achou){
 
-            window.location.href = "https://booksofia.vercel.app";
+            window.location.href =
+            "https://booksofia.vercel.app";
 
         }else{
 
