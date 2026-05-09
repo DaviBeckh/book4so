@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Book4so Login</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --rosa-principal:#ff6f91;
+    --rosa-fundo:#ffd6e0;
+    --rosa-capa:#ffccd5;
+    --rosa-borda:#ffb3c1;
+    --paginas:#fff5f8;
+    --morto:#2c2c2c;
+    --texto:#555;
+    --linhas:#f0f0f0;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Quicksand', sans-serif;
+}
+
+body{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(135deg,var(--rosa-fundo),var(--paginas));
+    overflow:hidden;
+}
+
+.container{
+    width:900px;
+    max-width:95%;
+    height:550px;
+    background:var(--paginas);
+    border-radius:30px;
+    overflow:hidden;
+    display:flex;
+    box-shadow:0 15px 40px rgba(0,0,0,0.15);
+    border:4px solid var(--rosa-borda);
+}
+
+.left{
+    width:45%;
+    background:linear-gradient(180deg,var(--rosa-principal),var(--rosa-capa));
+    padding:40px;
+    color:white;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    position:relative;
+}
+
+.left::before{
+    content:"";
+    position:absolute;
+    inset:15px;
+    border:2px dashed rgba(255,255,255,0.4);
+    border-radius:25px;
+}
+
+.left h1{
+    font-size:42px;
+    margin-bottom:15px;
+    z-index:1;
+}
+
+.left p{
+    z-index:1;
+    font-size:16px;
+}
+
+.right{
+    width:55%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:30px;
+
+    background:
+    repeating-linear-gradient(
+        to bottom,
+        var(--paginas),
+        var(--paginas) 28px,
+        var(--linhas) 29px
+    );
+}
+
+.form-box{
+    width:100%;
+    max-width:350px;
+}
+
+.tabs{
+    display:flex;
+    background:var(--rosa-fundo);
+    border-radius:15px;
+    padding:5px;
+    margin-bottom:30px;
+}
+
+.tabs button{
+    flex:1;
+    border:none;
+    background:none;
+    padding:12px;
+    border-radius:12px;
+    cursor:pointer;
+    font-size:15px;
+    font-weight:700;
+    color:var(--texto);
+    transition:.3s;
+}
+
+.tabs button.active{
+    background:var(--rosa-principal);
+    color:white;
+}
+
+form{
+    display:none;
+    animation:fade .3s ease;
+}
+
+form.active{
+    display:block;
+}
+
+@keyframes fade{
+
+    from{
+        opacity:0;
+        transform:translateY(10px);
+    }
+
+    to{
+        opacity:1;
+        transform:translateY(0);
+    }
+
+}
+
+.input-group{
+    margin-bottom:18px;
+}
+
+.input-group label{
+    display:block;
+    margin-bottom:6px;
+    color:var(--texto);
+    font-weight:600;
+}
+
+.input-group input{
+    width:100%;
+    padding:14px;
+    border-radius:14px;
+    border:2px solid var(--rosa-borda);
+    background:white;
+    outline:none;
+    transition:.3s;
+    color:var(--texto);
+}
+
+.input-group input:focus{
+    border-color:var(--rosa-principal);
+    box-shadow:0 0 0 4px rgba(255,111,145,0.2);
+}
+
+.submit-btn{
+    width:100%;
+    padding:15px;
+    border:none;
+    border-radius:16px;
+    background:var(--rosa-principal);
+    color:white;
+    font-size:16px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.submit-btn:hover{
+    transform:translateY(-2px);
+}
+
+.footer{
+    margin-top:18px;
+    text-align:center;
+    font-size:13px;
+    color:#888;
+}
+
+@media(max-width:800px){
+
+    .container{
+        flex-direction:column;
+        height:auto;
+    }
+
+    .left{
+        width:100%;
+        padding:50px 25px;
+    }
+
+    .right{
+        width:100%;
+        padding:40px 20px;
+    }
+
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="left">
+
+        <h1>🎀 Book4so</h1>
+
+        <p>
+            Faça login ou crie sua conta
+        </p>
+
+    </div>
+
+    <div class="right">
+
+        <div class="form-box">
+
+            <div class="tabs">
+
+                <button class="active" onclick="showForm('login',event)">
+                    Login
+                </button>
+
+                <button onclick="showForm('cadastro',event)">
+                    Cadastro
+                </button>
+
+            </div>
+
+            <!-- LOGIN -->
+            <form id="login" class="active">
+
+                <div class="input-group">
+
+                    <label>Email</label>
+
+                    <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Digite seu email">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Senha</label>
+
+                    <input
+                    type="password"
+                    id="loginSenha"
+                    placeholder="Digite sua senha">
+
+                </div>
+
+                <button
+                type="button"
+                class="submit-btn"
+                onclick="login()">
+
+                    Entrar
+
+                </button>
+
+            </form>
+
+            <!-- CADASTRO -->
+            <form id="cadastro">
+
+                <div class="input-group">
+
+                    <label>Nome</label>
+
+                    <input
+                    type="text"
+                    id="cadNome"
+                    placeholder="Digite seu nome">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Email</label>
+
+                    <input
+                    type="email"
+                    id="cadEmail"
+                    placeholder="Digite seu email">
+
+                </div>
+
+                <div class="input-group">
+
+                    <label>Senha</label>
+
+                    <input
+                    type="password"
+                    id="cadSenha"
+                    placeholder="Crie uma senha">
+
+                </div>
+
+                <button
+                type="button"
+                class="submit-btn"
+                onclick="cadastrar()">
+
+                    Criar conta
+
+                </button>
+
+            </form>
+
+            <div class="footer">
+                pt-br • firebase • realtime database
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- FIREBASE -->
+
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
+
+<script>
+
+const firebaseConfig = {
+
+  apiKey: "AIzaSyCTGZTbwcf2qdCKHRRyCCdd1-WiiHQtfEw",
+  authDomain: "logins-af2a4.firebaseapp.com",
+  databaseURL: "https://logins-af2a4-default-rtdb.firebaseio.com",
+  projectId: "logins-af2a4",
+  storageBucket: "logins-af2a4.firebasestorage.app",
+  messagingSenderId: "620803350478",
+  appId: "1:620803350478:web:e44a37082e5f014145d59f",
+  measurementId: "G-FGDHH4RL7H"
+
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+
+console.log("Firebase conectado");
+
+const buttons = document.querySelectorAll(".tabs button");
+const forms = document.querySelectorAll("form");
+
+function showForm(id,event){
+
+    forms.forEach(form=>{
+        form.classList.remove("active");
+    });
+
+    buttons.forEach(btn=>{
+        btn.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    event.target.classList.add("active");
+
+}
+
+function cadastrar(){
+
+    const nome = document.getElementById("cadNome").value;
+    const email = document.getElementById("cadEmail").value;
+    const senha = document.getElementById("cadSenha").value;
+
+    if(nome == "" || email == "" || senha == ""){
+
+        alert("Preencha todos os campos");
+        return;
+
+    }
+
+    db.ref("usuarios").once("value")
+
+    .then((snapshot)=>{
+
+        let existe = false;
+
+        snapshot.forEach((child)=>{
+
+            const dados = child.val();
+
+            if(dados.email == email){
+
+                existe = true;
+
+            }
+
+        });
+
+        if(existe){
+
+            alert("Esse email já está cadastrado");
+            return;
+
+        }
+
+        db.ref("usuarios/" + nome).set({
+
+            nome: nome,
+            email: email,
+            senha: senha
+
+        });
+
+        alert("Conta criada com sucesso!");
+
+        window.location.href = "https://booksofia.vercel.app";
+
+    });
+
+}
+
+function login(){
+
+    const email = document.getElementById("loginEmail").value;
+    const senha = document.getElementById("loginSenha").value;
+
+    db.ref("usuarios").once("value")
+
+    .then((snapshot)=>{
+
+        let achou = false;
+
+        snapshot.forEach((child)=>{
+
+            const dados = child.val();
+
+            if(
+                dados.email == email &&
+                dados.senha == senha
+            ){
+
+                achou = true;
+
+            }
+
+        });
+
+        if(achou){
+
+            alert("Login realizado!");
+
+            window.location.href = "https://booksofia.vercel.app";
+
+        }else{
+
+            alert("Email ou senha incorretos");
+
+        }
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>
