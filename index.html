@@ -210,14 +210,54 @@ form.active{
 
 @media(max-width:800px){
 
-    .container{
-        flex-direction:column;
-        height:auto;
+    body{
+        padding:20px;
+        overflow:auto;
     }
 
-    .left,
+    .container{
+        flex-direction:column;
+        width:100%;
+        height:auto;
+        border-radius:25px;
+    }
+
+    .left{
+        width:100%;
+        padding:40px 20px;
+        min-height:200px;
+    }
+
+    .left h1{
+        font-size:32px;
+    }
+
+    .left p{
+        font-size:14px;
+    }
+
     .right{
         width:100%;
+        padding:30px 20px;
+    }
+
+    .form-box{
+        max-width:100%;
+    }
+
+    .tabs button{
+        font-size:14px;
+        padding:10px;
+    }
+
+    .input-group input{
+        padding:13px;
+        font-size:15px;
+    }
+
+    .submit-btn{
+        padding:14px;
+        font-size:15px;
     }
 
 }
